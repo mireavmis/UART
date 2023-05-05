@@ -1,0 +1,12 @@
+./uart_tx.v
+./uart_input_manager.v
+./fifo.v
+./top.v
+./uart_output_manager.v
+./ASCII_To_HEX.v
+./synchronizer.v
+./HEX_to_ASCII.v
+./fsm.v
+./shift_reg.v
+./tb.v
+./uart_rx.v
