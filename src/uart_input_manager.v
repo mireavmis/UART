@@ -1,4 +1,4 @@
-module UART_input_manager #
+module UART_Input_Manager #
 (
     CLOCK_RATE  = 100_000_000,
     BAUD_RATE   = 9600,
@@ -47,4 +47,3 @@ wire [3:0] UART_RX_Data_Out_hex;
 ASCII_To_HEX AtH(.ASCII_in(UART_RX_Data_Out), .HEX_OUT(UART_RX_Data_Out_hex));
 
 endmodule
-
