@@ -1,8 +1,8 @@
 module UART_Input_Manager #
 (
-    CLOCK_RATE  = 100_000_000,
-    BAUD_RATE   = 9600,
-    DIGIT_COUNT = 4 // Result array size
+    parameter CLOCK_RATE  = 100_000_000,
+    parameter BAUD_RATE   = 9600,
+    parameter DIGIT_COUNT = 4 // Result array size
 )
 (
     input clk, 
@@ -13,37 +13,44 @@ module UART_Input_Manager #
 );
 
 reg [1:0] cnt;
-
+ 
 initial begin
     cnt = 0;
+    ready_out = 0;
+    out = 0;
 end
 
 always@(posedge clk) begin
 
-
-    if (cnt == (DIGIT_CONT - 1))
-        ready_out <= 1;
-    else
+    if (ready_out)
         ready_out <= 0;
 
     if (UART_RX_Ready_Out) begin
-        out[3+cnt*4:cnt*4] <= UART_RX_Data_Out_hex;
+
+        case(cnt)
+        0: out[3:0] <= UART_RX_Data_Out_hex;
+        1: out[7:4] <= UART_RX_Data_Out_hex;
+        2: out[11:8] <= UART_RX_Data_Out_hex;
+        3: out[15:12] <= UART_RX_Data_Out_hex;
+        endcase
+        if (cnt == (DIGIT_COUNT - 1))
+            ready_out <= 1;
         cnt <= cnt + 1;
     end
-
 end
 
 
-wire UART_RX_Ready_Out, UART_RX_Data_Out;
+wire UART_RX_Ready_Out;
+wire [7:0] UART_RX_Data_Out;
 UART_RX #(.CLOCK_RATE(CLOCK_RATE), .BAUD_RATE(BAUD_RATE)) uart_rx
 (
-    .clk               (clki             ), 
+    .clk               (clk              ), 
     .rx                (RsRx             ), 
     .UART_RX_Ready_Out (UART_RX_Ready_Out), 
     .UART_RX_Data_Out  (UART_RX_Data_Out ) 
 );
 
 wire [3:0] UART_RX_Data_Out_hex;
-ASCII_To_HEX AtH(.ASCII_in(UART_RX_Data_Out), .HEX_OUT(UART_RX_Data_Out_hex));
+ASCII_To_HEX AtH(.ASCII_in(UART_RX_Data_Out), .HEX_out(UART_RX_Data_Out_hex));
 
 endmodule
