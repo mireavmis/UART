@@ -26,7 +26,7 @@ initial begin
 end
 
 // Мажоритарный элемент
-reg [2:0] major_buf = 0;
+reg [2:0] major_buf = 7;
 wire major_out = major_buf[0] & major_buf[1] | 
     major_buf[0] & major_buf[2] |
     major_buf[1] & major_buf[2];

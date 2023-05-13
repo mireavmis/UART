@@ -6,6 +6,7 @@ module UART #(
 )(
     input clk, // Синхросигнал
     input RsRx, // Бит принимаемых данных (UART_RX)
+    input reset,
     output RsTx // Бит отправляемых данных (UART_TX)
 );
 
@@ -15,7 +16,8 @@ wire FSM_Ready_Input; // Сигнал о том, что данные на вхо
 wire FSM_Ready_Output; // Сигнал о том, что данные на выходе автомата сформированы
 wire [15:0] FSM_Data_Output; // Шина выходных данных автомата
 wire [0:0] FSM_Error_Output; // Шина ошибок на выходе автомата
-wire reset = 1'b0;
+
+reg [15:0] fsm_result = 0;
 
 // Автомат, занимающийся менеджментом входных данных с UART
 UART_Input_Manager #(.DIGIT_COUNT(DIGIT_COUNT)) uart_input_manager (
@@ -27,11 +29,11 @@ UART_Input_Manager #(.DIGIT_COUNT(DIGIT_COUNT)) uart_input_manager (
 );
 
 // Автомат, занимающийся менеджментом выходных данных на UART
-UART_Output_Manager #(.ERROR_COUNT(ERROR_COUNT)) uart_output_manager (
+UART_Output_Manager uart_output_manager (
     .clk(clk), // Вход: Синхросигнал
     .reset(reset),
     .ready_in(FSM_Ready_Output), // Вход: сигнал о том, что данные для отправки по UART сформированы
-    .data_in(FSM_Data_Output), // Вход: данные для отправки по UART
+    .dataIn(FSM_Data_Output), // Вход: данные для отправки по UART
     .error_in(FSM_Error_Output), // Вход: данные об ошибках для отправки по UART
     .RsTx(RsTx)
 );

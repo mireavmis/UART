@@ -15,7 +15,7 @@ reg [$clog2(CLOCK_RATE / BAUD_RATE):0] baud_counter; // Cчётчик часто
 reg [3:0] bit_counter; // счётчик переданных бит
 
 wire baud_flag; // Флаг о том, что счётчик синхросигнала стал равен половине такта BAUD_RATE
-assign baud_flag = baud_counter == CLOCK_RATE / BAUD_RATE;
+assign baud_flag = baud_counter == CLOCK_RATE / BAUD_RATE / 2;
 
 reg [1:0] state; // регистр текущего состояния автомата
 localparam RESET = 0, WAIT_READY_IN = 1, SEND_DATA = 2;
