@@ -13,7 +13,9 @@ module UART_Input_Manager #
 );
 
 reg [1:0] cnt;
- 
+wire UART_RX_Ready_Out;
+wire [7:0] UART_RX_Data_Out;
+wire [3:0] UART_RX_Data_Out_hex;
 initial begin
     cnt = 0;
     ready_out = 0;
@@ -40,8 +42,7 @@ always@(posedge clk) begin
 end
 
 
-wire UART_RX_Ready_Out;
-wire [7:0] UART_RX_Data_Out;
+
 UART_RX #(.CLOCK_RATE(CLOCK_RATE), .BAUD_RATE(BAUD_RATE)) uart_rx
 (
     .clk               (clk              ), 
@@ -50,7 +51,7 @@ UART_RX #(.CLOCK_RATE(CLOCK_RATE), .BAUD_RATE(BAUD_RATE)) uart_rx
     .UART_RX_Data_Out  (UART_RX_Data_Out ) 
 );
 
-wire [3:0] UART_RX_Data_Out_hex;
+
 ASCII_To_HEX AtH(.ASCII_in(UART_RX_Data_Out), .HEX_out(UART_RX_Data_Out_hex));
 
 endmodule

@@ -27,6 +27,12 @@ reg [ASCII_SIZE * ERROR_MSG_SIZE-1:0] error_msg = "Error";
 reg [2:0] state;
 reg [2:0] cnt;
 reg [15:0] data_in;
+reg UART_TX_Ready_In;
+reg [7:0] UART_TX_Data_In;
+wire uart_ready_in;
+reg [7:0] package_error_msg; // letter to transmit
+reg [3:0] package;
+wire [7:0] package_out;
 
 initial begin
     cnt = 0;
@@ -109,14 +115,10 @@ always@(posedge clk) begin
         data_in = dataIn;
 
 end
-reg [7:0] package_error_msg; // letter to transmit
-reg [3:0] package;
-wire [7:0] package_out;
+
 HEX_To_ASCII HtA(.hex_in(package), .ascii_out(package_out));
 
-reg UART_TX_Ready_In;
-reg [7:0] UART_TX_Data_In;
-wire uart_ready_in;
+
 UART_TX #(.CLOCK_RATE(CLOCK_RATE), .BAUD_RATE(BAUD_RATE)) uart_tx
 (
     .clk              (clk               ),

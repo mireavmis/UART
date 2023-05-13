@@ -82,7 +82,7 @@ task send_uart_packet;
     begin
         RsRx = 0; // Start bit
         #(CLOCK_RATE / BAUD_RATE);
-        for (i = 0; i < 8; i++) begin
+        for (i = 0; i < 8; i = i + 1) begin
             RsRx = data[i]; // Send data bits
             #(CLOCK_RATE / BAUD_RATE);
         end
